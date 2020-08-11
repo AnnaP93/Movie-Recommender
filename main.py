@@ -8,6 +8,7 @@ from Credit import Credit
 from Crew import Crew
 from read_input import read_input
 from Actor import Actor
+from MovieDetails import MovieDetails
 import json
 
 
@@ -71,7 +72,10 @@ def get_movie_credits() -> List[Credit]:
 
     return all_credits
 
-# def get_5000_movies_data():
+def get_5000_movies_data():
+    reading_5000_movie_data = read_input('tmdb_5000_movies.csv')
+    all_movie_details: List[MovieDetails] = []
+    return reading_5000_movie_data
 
 
 def __sanitize_credit(raw_credit: str) -> str:
@@ -157,9 +161,11 @@ def get_actors() -> List[Tuple[str, List[str]]]:
 
 def execute():
 
-    all_credits = get_movie_credits()
-    for unique_credit in all_credits:
-        print(unique_credit)
+    # all_credits = get_movie_credits()
+    # for unique_credit in all_credits:
+    #     print(unique_credit)
+
+    get_5000_movies_data
 
     # print(get_all_titles())
 
