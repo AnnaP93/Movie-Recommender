@@ -6,9 +6,11 @@ from typing import List, Tuple
 
 from Credit import Credit
 from Crew import Crew
+from Keywords import Keywords
 from read_input import read_input
 from Actor import Actor
 from MovieDetails import MovieDetails
+from Genres import Genres
 import json
 
 
@@ -19,21 +21,6 @@ def get_movie_credits() -> List[Credit]:
         movie_id: str
         title: str
         raw_credit = __sanitize_credit(raw_credit)
-
-
-        # "Extraction of movie id and title"
-        # Step 1: remove anything that is not related to id and title
-        # Step 2: remove any "leftovers" like " , or other weird symbols
-        # Step 3: Everything before first comma is id
-        # Step 4: Everything after first comma is title
-
-        # Index function:
-        # it takes 3 parameters:
-        # - value to find
-        # - starting from which index
-        # - ending with which index
-        # If indexes are not specified, it will take from the beginning till the end
-        # raw_credit.index('[', 0, None) is the same as raw_credit.index('[')
 
         cast_start_index = raw_credit.index('[')
         id_and_title = raw_credit[0:cast_start_index]
@@ -47,23 +34,6 @@ def get_movie_credits() -> List[Credit]:
         crew_start_index = raw_credit.index('[', cast_start_index+1, None)
         crew_end_index = raw_credit.index(']', cast_end_index+1, None)
         crew_data = raw_credit[crew_start_index:crew_end_index+1]
-
-
-        # temp = list(raw_credit.split(','))
-        # temp = __sanitize_title(temp, raw_credit)
-        # if '"' in temp[1]:
-        #     adjusted_separation = list(raw_credit.split(',"'))
-        #     adjusted_separation[1] = adjusted_separation[1].replace('"', '')
-        #     movie_id: str = adjusted_separation[0]
-        #     title: str = adjusted_separation[1]
-        #     cast: List[Actor] = __fill_actors(adjusted_separation[2])
-        #     crew: List[Crew] = __fill_crew(adjusted_separation[3])
-
-        # else:
-        # movie_id: str = temp[0]
-        # title: str = temp[1]
-        #
-        # temp: List[str] = list(raw_credit.split(',"'))
         cast: List[Actor] = __fill_actors(cast_data)
         crew: List[Crew] = __fill_crew(crew_data)
 
@@ -72,10 +42,67 @@ def get_movie_credits() -> List[Credit]:
 
     return all_credits
 
+
 def get_5000_movies_data():
     reading_5000_movie_data = read_input('tmdb_5000_movies.csv')
     all_movie_details: List[MovieDetails] = []
-    return reading_5000_movie_data
+    for single_movie_details in reading_5000_movie_data[1:10]:
+        budget: int
+        genres: List[str]
+        homepage: str
+        id: int
+        keywords: List[str]
+        original_title: str
+        overview: str
+        popularity: float
+        production_companies: List[str]
+        production_countries: List[str]
+        revenue: int
+        runtime: int
+        tagline: str
+        vote_average: float
+        vote_count: int
+
+        budget_index = single_movie_details.index(',')
+        budget = int(single_movie_details[0:budget_index])
+        genres_index = single_movie_details.index(']')
+        raw_genres = single_movie_details[budget_index+1:genres_index+1]
+        genres: List[Genres] = __fill_genres(raw_genres)
+        homepage_start_index = single_movie_details.index(',', genres_index, None)
+        homepage_end_index = single_movie_details.index(',', homepage_start_index+1, None)
+        homepage = single_movie_details[homepage_start_index:homepage_end_index].strip(',')
+        id_end_index = single_movie_details.index(',', homepage_end_index+1, None)
+        id = int(single_movie_details[homepage_end_index+1:id_end_index])
+        keywords_end_index = single_movie_details.index(']', id_end_index)
+        raw_keywords = single_movie_details[id_end_index+1:keywords_end_index+1].strip('"')
+        keywords: List[Genres] = __fill_keywords(raw_keywords)
+
+
+
+
+        movie_characteristics = MovieDetails(budget, genres, homepage, id, keywords, original_title)
+        all_movie_details.append(movie_characteristics)
+
+    return all_movie_details
+
+
+def __fill_genres(genres_data: str) -> List[Genres]:
+    all_genres: List[Genres] = []
+    genres_data = genres_data.replace('""', '"').strip('"')
+    genres_data = json.loads(genres_data)
+    for genre in genres_data:
+        all_genres.append(Genres(genre))
+    return all_genres
+
+
+def __fill_keywords(keywords_data: str) -> List[Keywords]:
+    all_keywords: List[Keywords] = []
+    keywords_data = keywords_data.replace('""', '"')
+    keywords_data = json.loads(keywords_data)
+    for keyword in keywords_data:
+        all_keywords.append(Keywords(keyword))
+    return all_keywords
+
 
 
 def __sanitize_credit(raw_credit: str) -> str:
@@ -165,11 +192,11 @@ def execute():
     # for unique_credit in all_credits:
     #     print(unique_credit)
 
-    get_5000_movies_data
+    #print(get_5000_movies_data())
 
     # print(get_all_titles())
 
-    # print(get_actors())
+    print(get_actors())
 
 
 execute()
