@@ -203,30 +203,6 @@ execute()
 
 
 
-# Tuple - NON Iterable
-# Anna, Popovych - single record
-# Viktor, Deineka - single record
-# person1 = { "Anna", "Popovych" }
-# person2 = { "Viktor", "Deineka" }
-
-
-# LIST - Iterable
-# (Anna, Popovych), (Viktor, Deineka), (Anna, Smith), (Anna Mykhailovska), (Anna Popovych) - many records
-# persons = List[Tuple[str, str]]
-# persons.Append({"Anna", "Popovych"})
-# persons.Append({"Viktor", "Deineka"})
-# persons.Append({"Anna", "Smith"})
-# persons.Append({"Anna", "Mykhailovska"})
-# persons.Append({"Anna", "Popovych"})
-
-# Dictionary - Iterable
-# (Anna, Popovych), (Viktor, Deineka) - Collection of unique keys with their values
-# persons = Dictionary[str, str]
-# persons["Anna"] = "Popovych"
-# persons["Viktor"] = "Deineka"
-# persons["Anna"] = "Smith" - ERROR
-
-
 
 
 
