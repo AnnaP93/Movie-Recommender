@@ -16,8 +16,9 @@ import json
 
 def get_movie_credits() -> List[Credit]:
     reading_credits_data = read_input('tmdb_5000_credits.csv')
+    del reading_credits_data[-1]
     all_credits: List[Credit] = []
-    for raw_credit in reading_credits_data[1:4804]:
+    for raw_credit in reading_credits_data[1:]:
         movie_id: str
         title: str
         raw_credit = __sanitize_credit(raw_credit)
@@ -153,9 +154,9 @@ def get_all_titles() -> List[str]:
 
 def execute():
 
-    # all_credits = get_movie_credits()
-    # for unique_credit in all_credits:
-    #     print(unique_credit)
+    all_credits = get_movie_credits()
+    for unique_credit in all_credits:
+        print(unique_credit)
 
     #print(get_5000_movies_data())
 
