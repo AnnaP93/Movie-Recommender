@@ -1,25 +1,32 @@
+from typing import List
+import datetime
+
+
 class MovieDetails:
-    def __init__(self, specific_movie):
-        self._budget: str = specific_movie['budget']
-        self._genres: str = specific_movie['genres']
-        self._homepage: str = specific_movie['homepage']
-        self._id: str = specific_movie['id']
-        self._keywords: str = specific_movie['keywords']
-        self._original_language: str = specific_movie['original_language']
-        self._original_title: str = specific_movie['original_title']
-        self._overview: str = specific_movie['overview']
-        self._popularity: str = specific_movie['popularity']
-        self._production_companies: str = specific_movie['production_companies']
-        self._production_countries: str = specific_movie['production_countries']
-        self._release_date: str = specific_movie['release_date']
-        self._revenue: str = specific_movie['revenue']
-        self._runtime: str = specific_movie['runtime']
-        self._spoken_languages: str = specific_movie['spoken_languages']
-        self._status: str = specific_movie['status']
-        self._tagline: str = specific_movie['tagline']
-        self._title: str = specific_movie['title']
-        self._vote_average: str = specific_movie['vote_average']
-        self.vote_count: str = specific_movie['vote_count']
+    def __init__(self, budget, genres, homepage, id, keywords, original_language, original_title, overview, popularity,
+                 production_companies, production_countries, release_date, revenue, runtime, spoken_languages, status,
+                 tagline, title, vote_average, vote_count):
+
+        self._budget: int = budget
+        self._genres: List[str] = genres
+        self._homepage: str = homepage
+        self._id: str = id
+        self._keywords: List[str] = keywords
+        self._original_language: str = original_language
+        self._original_title: str = original_title
+        self._overview: str = overview
+        self._popularity: float = popularity
+        self._production_companies: List[str] = production_companies
+        self._production_countries: List[str] = production_countries
+        self._release_date: datetime.date = release_date
+        self._revenue: int = revenue
+        self._runtime: int = runtime
+        self._spoken_languages: List[str] = spoken_languages
+        self._status: str = status
+        self._tagline: str = tagline
+        self._title: str = title
+        self._vote_average: float = vote_average
+        self._vote_count: int = vote_count
 
     @property
     def budget(self):
@@ -50,12 +57,24 @@ class MovieDetails:
         return self._production_countries
 
     @property
+    def release_date(self):
+        return self._release_date
+
+    @property
     def revenue(self):
         return self._revenue
 
     @property
     def runtime(self):
         return self._runtime
+
+    @property
+    def spoken_languages(self):
+        return self._spoken_languages
+
+    @property
+    def status(self):
+        return self._status
 
     @property
     def title(self):
@@ -68,3 +87,10 @@ class MovieDetails:
     @property
     def vote_count(self):
         return self._vote_count
+
+    def __repr__(self):
+        return '{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}'\
+            .format(self._budget, self._genres, self._homepage, self._id, self._keywords,
+                    self._original_language, self._original_title, self._overview, self._popularity, self._production_companies,
+                    self._production_countries, self._release_date, self._revenue, self._runtime, self._spoken_languages,
+                    self._status, self._title, self._vote_average, self._vote_count)

@@ -4,14 +4,19 @@
 # 4. Merge credits with movies files
 from typing import List, Tuple
 
+
 from Credit import Credit
 from Crew import Crew
 from Keywords import Keywords
+from ProductionCompanies import ProductionCompanies
+from ProductionCountries import ProductionCountries
+from SpokenLanguages import SpokenLanguages
 from read_input import read_input
 from Actor import Actor
 from MovieDetails import MovieDetails
 from Genres import Genres
 import json
+from datetime import date
 
 
 def get_movie_credits() -> List[Credit]:
@@ -44,23 +49,28 @@ def get_movie_credits() -> List[Credit]:
     return all_credits
 
 
-def get_5000_movies_data():
+def get_5000_movies_data() -> List[MovieDetails]:
     reading_5000_movie_data = read_input('tmdb_5000_movies.csv')
     all_movie_details: List[MovieDetails] = []
     for single_movie_details in reading_5000_movie_data[1:10]:
         budget: int
-        genres: List[str]
+        genres: List[Genres]
         homepage: str
         id: int
-        keywords: List[str]
+        keywords: List[Keywords]
         original_title: str
         overview: str
         popularity: float
-        production_companies: List[str]
-        production_countries: List[str]
+        production_companies: List[ProductionCompanies]
+        production_countries: List[ProductionCountries]
+        # release_date: date
+        release_date: str
         revenue: int
         runtime: int
+        spoken_languages: List[SpokenLanguages]
+        status: str
         tagline: str
+        title: str
         vote_average: float
         vote_count: int
 
@@ -74,14 +84,54 @@ def get_5000_movies_data():
         homepage = single_movie_details[homepage_start_index:homepage_end_index].strip(',')
         id_end_index = single_movie_details.index(',', homepage_end_index+1, None)
         id = int(single_movie_details[homepage_end_index+1:id_end_index])
-        keywords_end_index = single_movie_details.index(']', id_end_index)
+        keywords_end_index = single_movie_details.index(']', id_end_index, None)
         raw_keywords = single_movie_details[id_end_index+1:keywords_end_index+1].strip('"')
-        keywords: List[Genres] = __fill_keywords(raw_keywords)
+        keywords = __fill_keywords(raw_keywords)
+        original_language_start_index = single_movie_details.index(',', keywords_end_index, None)
+        original_language_end_index = single_movie_details.index(',', original_language_start_index+1, None)
+        original_language = single_movie_details[original_language_start_index+1:original_language_end_index]
+        original_title_end_index = single_movie_details.index(',', original_language_end_index+1, None)
+        original_title = single_movie_details[original_language_end_index+1:original_title_end_index]
+        overview_start_index = single_movie_details.index('"', original_title_end_index, None)
+        overview_end_index = single_movie_details.index('"', overview_start_index+1, None)
+        overview = single_movie_details[overview_start_index+1:overview_end_index]
+        popularity_start_index = single_movie_details.index(',', overview_end_index, None)
+        popularity_end_idex = single_movie_details.index(',', popularity_start_index+1, None)
+        popularity = single_movie_details[overview_end_index+2:popularity_end_idex]
+        production_companies_start_index = single_movie_details.index('[', popularity_end_idex, None)
+        production_companies_end_index = single_movie_details.index(']', popularity_start_index, None)
+        raw_production_companies = single_movie_details[production_companies_start_index:production_companies_end_index+1]
+        production_companies = __fill_production_companies(raw_production_companies)
+        production_countries_start_index = single_movie_details.index('[', production_companies_end_index, None)
+        production_countries_end_index = single_movie_details.index(']', production_countries_start_index, None)
+        raw_production_countries = single_movie_details[production_countries_start_index:production_countries_end_index+1]
+        production_countries = __fill_production_countries(raw_production_countries)
+        release_date_start_index = single_movie_details.index(',', production_countries_end_index, None)
+        release_date_end_index = single_movie_details.index(',', release_date_start_index+1, None)
+        release_date = single_movie_details[release_date_start_index+1:release_date_end_index]
+        revenue_end_index = single_movie_details.index(',', release_date_end_index+1)
+        revenue = single_movie_details[release_date_end_index+1:revenue_end_index]
+        runtime_end_index = single_movie_details.index(',', revenue_end_index+1, None)
+        runtime = single_movie_details[revenue_end_index+1: runtime_end_index]
+        spoken_languages_start_index = single_movie_details.index('[', runtime_end_index, None)
+        spoken_languages_end_index = single_movie_details.index(']', runtime_end_index, None)
+        raw_spoken_languages = single_movie_details[spoken_languages_start_index:spoken_languages_end_index+1]
+        spoken_languages = _fill_spoken_languages(raw_spoken_languages)
+        status_start_index = single_movie_details.index(',', spoken_languages_end_index, None)
+        status_end_index = single_movie_details.index(',', status_start_index+1, None)
+        status = single_movie_details[status_start_index+1:status_end_index]
+        tagline_end_index = single_movie_details.index(',', status_end_index+1, None)
+        tagline = single_movie_details[status_end_index+1:tagline_end_index]
+        title_end_index = single_movie_details.index(',', tagline_end_index+1, None)
+        title = single_movie_details[tagline_end_index+1:title_end_index]
+        vote_average_end_index = single_movie_details.index(',', title_end_index+1, None)
+        vote_average = float(single_movie_details[title_end_index+1:vote_average_end_index])
+        vote_count = single_movie_details[vote_average_end_index+1:]
 
-
-
-
-        movie_characteristics = MovieDetails(budget, genres, homepage, id, keywords, original_title)
+        movie_characteristics = MovieDetails(budget, genres, homepage, id, keywords, original_language,
+                                             original_title, overview, popularity, production_companies,
+                                             production_countries, release_date, revenue, runtime, spoken_languages,
+                                             status, tagline, title, vote_average, vote_count)
         all_movie_details.append(movie_characteristics)
 
     return all_movie_details
@@ -104,6 +154,36 @@ def __fill_keywords(keywords_data: str) -> List[Keywords]:
         all_keywords.append(Keywords(keyword))
     return all_keywords
 
+
+def __fill_production_companies(production_companies_data):
+    all_production_companies: List[ProductionCompanies] = []
+    production_companies_data = production_companies_data.replace('""', '"')
+    production_companies_data = json.loads(production_companies_data)
+    for production_company in production_companies_data:
+        all_production_companies.append(ProductionCompanies(production_company))
+
+    return all_production_companies
+
+
+def __fill_production_countries(production_countries_data):
+
+    all_production_countries: List[ProductionCountries] = []
+    production_countries_data = production_countries_data.replace('""', '"')
+    production_countries_data = json.loads(production_countries_data)
+    for production_country in production_countries_data:
+        all_production_countries.append(ProductionCountries(production_country))
+
+    return all_production_countries
+
+
+def _fill_spoken_languages(languages_data):
+    all_spoken_languages: List[SpokenLanguages] = []
+    languages_data = languages_data.replace('""', '"')
+    languages_data = json.loads(languages_data)
+    for each_language in languages_data:
+        all_spoken_languages.append(SpokenLanguages(each_language))
+
+    return all_spoken_languages
 
 
 def __sanitize_credit(raw_credit: str) -> str:
@@ -154,11 +234,11 @@ def get_all_titles() -> List[str]:
 
 def execute():
 
-    all_credits = get_movie_credits()
-    for unique_credit in all_credits:
-        print(unique_credit)
+    # all_credits = get_movie_credits()
+    # for unique_credit in all_credits:
+    #     print(unique_credit)
 
-    #print(get_5000_movies_data())
+    print(get_5000_movies_data())
 
     # print(get_all_titles())
 
