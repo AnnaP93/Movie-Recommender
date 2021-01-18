@@ -15,9 +15,6 @@ def get_actors() -> List[Tuple[str, List[str]]]:
     """
     credits_data = get_movie_credits()
     actors = []
-    # test: List[str, List[str]] = []
-    # t_actors: List[str] = ["Sam", "Zoe"]
-    # test.append(("Avatar", t_actors))
     for credit in credits_data:
         only_cast: List[Actor] = credit.cast
         for actor_characteristic in only_cast:
