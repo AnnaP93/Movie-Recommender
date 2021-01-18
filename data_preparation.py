@@ -53,6 +53,7 @@ def get_5000_movies_data() -> List[MovieDetails]:
     reading_5000_movie_data = read_input('tmdb_5000_movies.csv')
     all_movie_details: List[MovieDetails] = []
     for single_movie_details in reading_5000_movie_data[1:10]:
+        single_movie_details = __sanitize_movies_data(single_movie_details)
         budget: int
         genres: List[Genres]
         homepage: str
@@ -136,6 +137,12 @@ def get_5000_movies_data() -> List[MovieDetails]:
 
     return all_movie_details
 
+
+def __sanitize_movies_data(raw_movie: str) -> str:
+    raw_movie = raw_movie.replace('"At the end of the world, the adventure begins."',
+                                  'At the end of the world the adventure begins.')
+    raw_movie = raw_movie.replace('"Lost in our world, found in another."', 'Lost in our world found in another.')
+    return raw_movie
 
 def __fill_genres(genres_data: str) -> List[Genres]:
     all_genres: List[Genres] = []
