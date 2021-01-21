@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 from Credit import Credit
 from Crew import Crew
 from Keywords import Keywords
@@ -50,7 +50,7 @@ def get_5000_movies_data():
     return reading_5000_movie_data
 
 
-def __fill_genres(genres_data: str) -> List[Genres]:
+def __fill_genres(genres_data):
     all_genres: List[Genres] = []
     if genres_data == '[]':
         return 'NaN'
@@ -60,7 +60,7 @@ def __fill_genres(genres_data: str) -> List[Genres]:
     return all_genres
 
 
-def __fill_keywords(keywords_data: str) -> List[Keywords]:
+def __fill_keywords(keywords_data):
     all_keywords: List[Keywords] = []
     if keywords_data == '[]':
         return 'NaN'
@@ -136,6 +136,16 @@ def get_merged_dataframes():
     right = get_movie_credits().set_index(['movie_id'])
     joined_dfs = left.join(right, lsuffix='TMDB 5000 Movies', rsuffix='TMDB 5000 Credits')
     return joined_dfs
+
+
+def get_characters_actors_popularity():
+    all_data = get_merged_dataframes()
+    return all_data[['original_title', 'cast', 'popularity']]
+
+
+def get_crew_members_production_companies():
+    all_data = get_merged_dataframes()
+    return all_data[['original_title', 'crew', 'production_companies']]
 
 
 def execute():
