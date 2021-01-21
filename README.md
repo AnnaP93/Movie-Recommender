@@ -33,8 +33,9 @@ The 'tmdb_5000_movies' dataset has the following features:
 
 
 ### **Goal**
-The goal of this project is to build on Python programming skills by practicing data transormation of the given datasets. 
+The goal of this project is to leverage demographic filtering to the dataset and identify top-10 movies to recommend users with similar demographic features.
 
+In order to identify top-10 movies, IMDB's weighted rating was applied to the dataset. 
 
-The program provides details of the requested movie such as unique actors played in each movie, genres, production companies and countries, movie keywords, details about the crew and more.
+The program provides a list of top-10 movies and information about their respective actors, crew memebers, production companies and popularity of each movie.
 
