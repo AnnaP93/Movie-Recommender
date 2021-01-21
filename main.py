@@ -1,34 +1,26 @@
 from typing import List, Tuple
-from Actor import Actor
-from data_preparation import get_movie_credits
+from data_preparation import get_movie_credits, get_merged_dataframes
 
 
-def get_actors() -> List[Tuple[str, List[str]]]:
-    """
-    This method returns the list of unique actors' names in each movie.
-    :return:
-    str(title) from Credit & list(str(name)) from Credit
+def get_characters_actors_popularity():
 
-    List[str, List[str]]
-    The actors played in Avatar are: Sam Worthington, Zoe Saldana, etc.
-    The actors played in Pirates of the Caribbean are: Johnny Depp, Sam Worthington
-    """
-    credits_data = get_movie_credits()
-    actors = []
-    for credit in credits_data:
-        only_cast: List[Actor] = credit.cast
-        for actor_characteristic in only_cast:
-            only_actors = actor_characteristic.name
-            actors.append(only_actors)
-        print(str.format("The actors played in {0} are {1}", credit.title, actors))
-        actors = []
+    all_data = get_merged_dataframes()
+    for index, each_row in all_data.iterrows():
+        print('The actors played in {0} include: {1}. The movie popularity is {2}.'
+              .format(each_row['original_title'], each_row['cast'], each_row['popularity']))
 
-    return actors
+
+def get_crew_members_production_companies():
+    all_data = get_merged_dataframes()
+    for index, each_row in all_data.iterrows():
+        print('The crew members worked on {0} include: {1}. The production companies are: {2}'
+              .format(each_row['original_title'], each_row['crew'], each_row['production_companies']))
 
 
 def execute():
 
-    print(get_actors())
+    get_characters_actors_popularity()
+    # get_crew_members_production_companies()
 
 
 execute()

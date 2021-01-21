@@ -9,3 +9,11 @@ class Crew:
 
     def __repr__(self):
         return str.format('{0} - {1}', self._job, self._name)
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def job(self):
+        return self._job
