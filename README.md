@@ -1,4 +1,3 @@
-# Movie-Recommender
 
 ### **Dataset Details**
 The data resources were taken from Kaggle - https://www.kaggle.com/ibtesama/getting-started-with-a-movie-recommendation-system/data
