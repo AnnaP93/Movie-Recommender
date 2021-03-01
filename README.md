@@ -33,7 +33,7 @@ The 'tmdb_5000_movies' dataset has the following features:
 
 
 ### **Goal**
-The goal of this project is to leverage demographic filtering to the dataset and identify top-10 movies to recommend users with similar demographic features.
+The goal of this project is to practise data wrangling and working with Python Pandas library.
 
 In order to identify top-10 movies, IMDB's weighted rating was applied to the dataset. 
 
